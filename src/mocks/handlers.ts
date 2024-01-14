@@ -1,9 +1,8 @@
 import { HttpResponse, graphql } from 'msw'
-import { v4 as uuid } from 'uuid'
 import GET_PRODUCTS, { GET_PRODUCT } from '../graphql/products'
 
 const mock_products = Array.from({ length: 20 }).map((_, i) => ({
-    id: uuid(),
+    id: i + 1 + '',
     imageUrl: 'https://picsum.photos/200/150',
     price: 50000,
     title: `임시상품${i + 1}`,
