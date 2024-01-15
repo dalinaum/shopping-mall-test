@@ -13,17 +13,16 @@ const CartItem = ({
     const { mutate: updateCart } = useMutation(({ id, amount }: { id: string, amount: number }) =>
         graphqlFetcher(UPDATE_CART, { id, amount }))
 
-    const handleUpdate = (e: SyntheticEvent) => {
+    const handleUpdateAmount = (e: SyntheticEvent) => {
         const amount = Number((e.target as HTMLInputElement).value)
-        const queryClient = getClient()
+        // const queryClient = getClient()
         updateCart({ id, amount }, {
             onSuccess: newValue => {
-                console.log(newValue)
                 // const prevCart = queryClient.getQueryData<{[key: string]: CartType}>(QueryKeys.CART)
-                const newCart = {
-                    ...newValue as {[key: string]: CartType}
-                }
-                queryClient.setQueryData(QueryKeys.CART, newCart)
+                // const newCart = {
+                //     ...newValue as {[key: string]: CartType}
+                // }
+                getClient().setQueryData(QueryKeys.CART, newValue)
             }
         })
     }
@@ -37,7 +36,7 @@ const CartItem = ({
                 type="number"
                 className="cart-item__amount"
                 value={amount}
-                onChange={handleUpdate}
+                onChange={handleUpdateAmount}
             />
         </li>
     )
