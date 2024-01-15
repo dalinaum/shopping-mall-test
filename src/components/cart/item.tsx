@@ -10,12 +10,12 @@ const CartItem = ({
     title,
     amount
 }: CartType) => {
+    const queryClient = getClient()
     const { mutate: updateCart } = useMutation(
         ({ id, amount }: { id: string, amount: number }) =>
             graphqlFetcher(UPDATE_CART, { id, amount }),
         {
             onMutate: async ({ id, amount }) => {
-                const queryClient = getClient()
                 await queryClient.cancelQueries(QueryKeys.CART)
                 const prevCart = queryClient.getQueryData<{ [key: string]: CartType }>(QueryKeys.CART)
                 if (!prevCart?.[id]) return prevCart
@@ -28,7 +28,13 @@ const CartItem = ({
             },
 
             onSuccess: newValue => {
-                getClient().setQueryData(QueryKeys.CART, newValue)
+                const prevCart = queryClient.getQueryData<CartType>(QueryKeys.CART)
+                const newCart = {
+                    ...(prevCart || {}),
+                    [id]: newValue
+                }
+                console.log('onSuccess', newCart)
+                getClient().setQueryData(QueryKeys.CART, newCart)
             },
         })
 
@@ -39,7 +45,7 @@ const CartItem = ({
 
     return (
         <li className="cart-item">
-            <img src={imageUrl} />
+            <img className="cart-item__image" src={imageUrl} />
             <p className="cart-item__price">{price}</p>
             <p className="cart-item__title">{title}</p>
             <input

@@ -37,44 +37,42 @@ export const handlers = [
 
     graphql.mutation(ADD_CART, ({ variables }) => {
         const { id } = variables
-        const newData = { ...cartData }
 
-        if (newData[id]) {
-            newData[id] = {
-                ...newData[id],
-                amount: (newData[id].amount || 0) + 1
-            }
-        } else {
-            const found = mock_products.find(item => item.id == id)
-            if (found) {
-                newData[id] = {
-                    ...found,
-                    amount: 1
-                }
-            }
+        const found = mock_products.find(item => item.id == id)
+        if (!found) {
+            throw new Error('상품이 없습니다.')
         }
-
-        cartData = newData
+        const newItem = {
+            ...found,
+            amount: (cartData[id]?.amount || 0) + 1
+        }
+        const newCartData = {
+            ...cartData,
+            [id]: newItem
+        }
+        cartData = newCartData
         return HttpResponse.json({
-            data: newData
+            data: newItem
         })
     }),
 
     graphql.mutation(UPDATE_CART, ({ variables }) => {
         const { id, amount } = variables
-        const newData = { ...cartData }
 
-        if (!newData[id]) {
+        if (!cartData[id]) {
             throw new Error('없는 데이터입니다')
         }
-        newData[id] = {
-            ...newData[id],
+        const newItem = {
+            ...cartData[id],
             amount
         }
-
-        cartData = newData
+        const newCartData = {
+            ...cartData,
+            [id]: newItem
+        }
+        cartData = newCartData
         return HttpResponse.json({
-            data: newData
+            data: newItem
         })
     })
 ]
