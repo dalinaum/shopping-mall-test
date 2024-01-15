@@ -15,8 +15,16 @@ const CartItem = ({
 
     const handleUpdate = (e: SyntheticEvent) => {
         const amount = Number((e.target as HTMLInputElement).value)
+        const queryClient = getClient()
         updateCart({ id, amount }, {
-            onSuccess: () => getClient().invalidateQueries(QueryKeys.CART)
+            onSuccess: newValue => {
+                console.log(newValue)
+                // const prevCart = queryClient.getQueryData<{[key: string]: CartType}>(QueryKeys.CART)
+                const newCart = {
+                    ...newValue as {[key: string]: CartType}
+                }
+                queryClient.setQueryData(QueryKeys.CART, newCart)
+            }
         })
     }
 
