@@ -51,6 +51,7 @@ const CartItem = ({
 
     const handleUpdateAmount = (e: SyntheticEvent) => {
         const amount = Number((e.target as HTMLInputElement).value)
+        if (amount < 1) return
         updateCart({ id, amount })
     }
 
@@ -68,6 +69,7 @@ const CartItem = ({
                 className="cart-item__amount"
                 type="number"
                 value={amount}
+                min={1}
                 onChange={handleUpdateAmount}
             />
             <button className="cart-item__button" type="button" onClick={handleDeleteItem} >
