@@ -1,6 +1,6 @@
 import { HttpResponse, graphql } from 'msw'
 import GET_PRODUCTS, { GET_PRODUCT } from '../graphql/products'
-import { ADD_CART, CartType, GET_CART, UPDATE_CART } from '../graphql/cart'
+import { ADD_CART, CartType, DELTE_CART, GET_CART, UPDATE_CART } from '../graphql/cart'
 
 const mock_products = Array.from({ length: 20 }).map((_, i) => ({
     id: i + 1 + '',
@@ -73,6 +73,16 @@ export const handlers = [
         cartData = newCartData
         return HttpResponse.json({
             data: newItem
+        })
+    }),
+
+    graphql.mutation(DELTE_CART, ({ variables }) => {
+        const { id } = variables
+        const newData = { ...cartData }
+        delete newData[id]
+        cartData = newData
+        return HttpResponse.json({
+            data: id
         })
     })
 ]
