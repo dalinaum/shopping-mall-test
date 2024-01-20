@@ -1,15 +1,12 @@
-import { SyntheticEvent } from "react"
+import { ForwardedRef, SyntheticEvent, forwardRef } from "react"
 import { useMutation } from "react-query"
 import { UPDATE_CART, CartType, DELTE_CART } from "../../graphql/cart"
 import { QueryKeys, getClient, graphqlFetcher } from "../../queryClient"
 
-const CartItem = ({
-    id,
-    imageUrl,
-    price,
-    title,
-    amount
-}: CartType) => {
+const CartItem = (
+    { id, imageUrl, price, title, amount }: CartType,
+    ref: ForwardedRef<HTMLInputElement>
+) => {
     const queryClient = getClient()
     const { mutate: updateCart } = useMutation(
         ({ id, amount }: { id: string, amount: number }) =>
@@ -61,7 +58,7 @@ const CartItem = ({
 
     return (
         <li className="cart-item">
-            <input className="cart-item__checkbox" type="checkbox" name="select-item" />
+            <input className="cart-item__checkbox" type="checkbox" name="select-item" ref={ref} />
             <img className="cart-item__image" src={imageUrl} />
             <p className="cart-item__price">{price}</p>
             <p className="cart-item__title">{title}</p>
@@ -79,4 +76,4 @@ const CartItem = ({
     )
 }
 
-export default CartItem
+export default forwardRef(CartItem)
