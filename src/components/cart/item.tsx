@@ -61,7 +61,7 @@ const CartItem = ({
 
     return (
         <li className="cart-item">
-            <input className="cart-item__checkbox" type="checkbox" />
+            <input className="cart-item__checkbox" type="checkbox" name="select-item" />
             <img className="cart-item__image" src={imageUrl} />
             <p className="cart-item__price">{price}</p>
             <p className="cart-item__title">{title}</p>
