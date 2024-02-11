@@ -87,10 +87,12 @@ export const handlers = [
         })
     }),
 
-    graphql.mutation(EXECUTE_PAY, ({ variables }) => {
-        console.log(variables)
+    graphql.mutation(EXECUTE_PAY, ({ variables: ids }: { variables: string[] }) => {
+        ids.forEach(id => {
+            delete cartData[id]
+        })
         return HttpResponse.json({
-            data: {}
+            data: ids
         })
     })
 ]
