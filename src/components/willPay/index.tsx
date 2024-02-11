@@ -20,7 +20,7 @@ const WillPay = ({
         <div className="cart-willpay">
             <ul>
                 {checkedItems.map(({ imageUrl, price, title, amount, id }) =>
-                    <li>
+                    <li key={id}>
                         <ItemData imageUrl={imageUrl} price={price} title={title} key={id} />
                         <p>수량: {amount}</p>
                         <p>금액: {price * amount}</p>
