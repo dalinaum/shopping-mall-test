@@ -3,7 +3,7 @@ import GET_PRODUCTS, { GET_PRODUCT } from '../graphql/products'
 import { ADD_CART, CartType, DELTE_CART, GET_CART, UPDATE_CART } from '../graphql/cart'
 import { EXECUTE_PAY } from '../graphql/payment'
 
-const mock_products = Array.from({ length: 20 }).map((_, i) => ({
+const mockProducts = Array.from({ length: 20 }).map((_, i) => ({
     id: i + 1 + '',
     imageUrl: `https://picsum.photos/id/${i + 10}/200/150`,
     price: 50000,
@@ -18,7 +18,7 @@ export const handlers = [
     graphql.query(GET_PRODUCTS, () => {
         return HttpResponse.json({
             data: {
-                products: mock_products
+                products: mockProducts
             }
         })
     }),
@@ -26,7 +26,7 @@ export const handlers = [
     graphql.query(GET_PRODUCT, ({ variables }) => {
         const { id } = variables
         return HttpResponse.json({
-            data: mock_products.find(item => item.id == id)
+            data: mockProducts.find(item => item.id == id)
         })
     }),
 
@@ -39,7 +39,7 @@ export const handlers = [
     graphql.mutation(ADD_CART, ({ variables }) => {
         const { id } = variables
 
-        const found = mock_products.find(item => item.id == id)
+        const found = mockProducts.find(item => item.id == id)
         if (!found) {
             throw new Error('상품이 없습니다.')
         }
