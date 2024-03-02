@@ -5,11 +5,6 @@ import { RecoilRoot } from 'recoil'
 import './scss/index.scss'
 import App from './app'
 
-if (import.meta.env.DEV) {
-  const { worker } = await import('./mocks/browser')
-  worker.start()
-}
-
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <RecoilRoot>

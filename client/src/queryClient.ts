@@ -21,8 +21,7 @@ export const getClient = (() => {
     }
 })()
 
-// const BASE_URL = 'https://fakestoreapi.com'
-const BASE_URL = '/'
+const BASE_URL = 'http://localhost:8000/graphql'
 
 export const resetFetcher = async ({
     method,

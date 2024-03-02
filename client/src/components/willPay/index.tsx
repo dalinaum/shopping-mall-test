@@ -6,12 +6,12 @@ import ItemData from "../cart/itemData"
 const WillPay = ({
     submitTitle,
     handleSubmit
- }: {
+}: {
     submitTitle: string
     handleSubmit: (e: SyntheticEvent) => void
- } ) => {
+}) => {
     const checkedItems = useRecoilValue(checkedCartState)
-    const totalPrice = checkedItems.reduce((res, { price, amount }) => {
+    const totalPrice = checkedItems.reduce((res, { product: { price }, amount }) => {
         res += price * amount
         return res
     }, 0)
@@ -19,7 +19,7 @@ const WillPay = ({
     return (
         <div className="cart-willpay">
             <ul>
-                {checkedItems.map(({ imageUrl, price, title, amount, id }) =>
+                {checkedItems.map(({ product: { imageUrl, price, title }, amount, id }) =>
                     <li key={id}>
                         <ItemData imageUrl={imageUrl} price={price} title={title} key={id} />
                         <p>수량: {amount}</p>
@@ -34,4 +34,3 @@ const WillPay = ({
 }
 
 export default WillPay
-

@@ -6,9 +6,9 @@ import ProductDetail from "../../components/product/detail"
 
 const ProductDetailPage = () => {
     const { id } = useParams()
-    const { data } = useQuery<Product>(
+    const { data } = useQuery<{ product: Product }>(
         [QueryKeys.PRODUCTS, id],
-        () => graphqlFetcher<Product>(GET_PRODUCT, { id })
+        () => graphqlFetcher<{ product: Product }>(GET_PRODUCT, { id })
     )
 
     if (!data) return null;
@@ -16,7 +16,7 @@ const ProductDetailPage = () => {
     return (
         <div>
             <h2>상품상세</h2>
-            <ProductDetail item={data} />
+            <ProductDetail item={data.product} />
         </div>
     )
 }

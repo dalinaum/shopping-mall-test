@@ -53,7 +53,7 @@ const cartResolver: Resolver = {
             }
             db.cart.splice(existCartItemIndex, 1)
             setJSON(db.cart)
-            return id
+            return { id }
         },
         executePay: (parent, { ids }, { db }) => {
             const newCartData = db.cart.filter(cartItem =>
