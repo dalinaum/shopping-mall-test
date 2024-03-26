@@ -20,7 +20,7 @@ const ProductListPage = () => {
     )
 
     useEffect(() => {
-        if (!intersecting || !isSuccess || !hasNextPage && isFetchingNextPage) return
+        if (!intersecting || !isSuccess || !hasNextPage || isFetchingNextPage) return
         fetchNextPage()
     }, [intersecting])
 
