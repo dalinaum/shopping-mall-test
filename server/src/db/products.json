@@ -418,5 +418,28 @@
         "price": 5000,
         "title": "임시상품60",
         "description": "임시상세내용60"
+    },
+    {
+        "id": "3a90d6df-90ff-433e-ad47-25e13a5eb17a",
+        "imageUrl": "https://picsum.photo/id/61",
+        "price": 3200,
+        "title": "제대로 된 상품",
+        "description": "이것은진짜에요",
+        "createdAt": 1712424069748
+    },
+    {
+        "id": "bcf50833-cd03-49fa-af89-da8e502ad76b",
+        "imageUrl": "https://picsum.photo/id/61",
+        "price": 3200,
+        "title": "제대로 된 상품",
+        "description": "이것은진짜에요",
+        "createdAt": 1712424072277
+    },
+    {
+        "id": "550d27ac-cedc-4f71-9966-4c7ef0155efd",
+        "imageUrl": "https://picsum.photo/id/61",
+        "price": 5000,
+        "title": "제대로 된 상품",
+        "description": "이것은진짜에요"
     }
 ]
