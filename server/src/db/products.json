@@ -20,8 +20,7 @@
         "imageUrl": "https://picsum.photos/id/2/200/150",
         "price": 2000,
         "title": "임시상품_2",
-        "description": "임시상세내용2",
-        "createdAt": 1704684099992
+        "description": "임시상세내용2"
     },
     {
         "id": "a9ed79d4-a430-49cb-ae95-75107be0610a",
