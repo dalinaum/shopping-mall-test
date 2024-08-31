@@ -4,14 +4,7 @@ import { graphqlFetcher } from '../../queryClient'
 import { useMutation } from 'react-query'
 import { ADD_CART } from '../../graphql/cart'
 
-const ProductItem = ({
-    id,
-    imageUrl,
-    price,
-    title,
-    description,
-    createdAt
-}: Product) => {
+const ProductItem = ({ id, imageUrl, price, title }: Product) => {
     const { mutate: addCart } = useMutation((id: string) => graphqlFetcher(ADD_CART, { id }))
 
     return (
