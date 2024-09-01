@@ -10,7 +10,7 @@ const AddForm = () => {
 
     const { mutate: addProduct } = useMutation(
         ({ title, imageUrl, price, description }: OmittedProduct) =>
-            graphqlFetcher(ADD_PRODUCT, { title, imageUrl, price, description }),
+            graphqlFetcher<Product>(ADD_PRODUCT, { title, imageUrl, price, description }),
         {
             // onMutate: async ({ id, amount }) => {
             //     await queryClient.cancelQueries(QueryKeys.CART)

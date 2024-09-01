@@ -15,7 +15,7 @@ const Payment = () => {
     const [checkedCartData, setCheckedCartData] = useRecoilState(checkedCartState)
     const [modalShown, toggleModal] = useState(false)
     const { mutate: executePay } = useMutation(
-        (ids: PaymentInfos) => graphqlFetcher(EXECUTE_PAY, { ids }))
+        (ids: PaymentInfos) => graphqlFetcher<PaymentInfos>(EXECUTE_PAY, { ids }))
 
     const showModal = () => {
         toggleModal(true)

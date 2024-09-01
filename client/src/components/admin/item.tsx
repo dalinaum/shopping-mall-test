@@ -2,10 +2,10 @@ import { Link } from 'react-router-dom'
 import { Product } from '../../graphql/products'
 import { graphqlFetcher } from '../../queryClient'
 import { useMutation } from 'react-query'
-import { ADD_CART } from '../../graphql/cart'
+import { ADD_CART, CartType } from '../../graphql/cart'
 
 const AdminItem = ({ id, imageUrl, price, title }: Product) => {
-    const { mutate: addCart } = useMutation((id: string) => graphqlFetcher(ADD_CART, { id }))
+    const { mutate: addCart } = useMutation((id: string) => graphqlFetcher<CartType>(ADD_CART, { id }))
 
     return (
         <li className="product-item">
