@@ -35,7 +35,8 @@ const CartItem = (
                 newCart.splice(targetIndex, 1, updateCart)
                 getClient().setQueryData(QueryKeys.CART, { cart: newCart })
             },
-        })
+        }
+    )
 
     const { mutate: deleteCart } = useMutation(
         ({ id }: { id: string }) => graphqlFetcher(DELTE_CART, { id }),
