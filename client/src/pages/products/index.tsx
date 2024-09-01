@@ -4,6 +4,7 @@ import { graphqlFetcher, QueryKeys } from "../../queryClient"
 import GET_PRODUCTS, { Products } from "../../graphql/products"
 import ProductList from "../../components/product/list"
 import useIntersection from "../../hooks/useIntersection"
+import ProductItem from "../../components/product/item"
 
 const ProductListPage = () => {
     const fetchMoreRef = useRef<HTMLDivElement>(null)
@@ -27,7 +28,7 @@ const ProductListPage = () => {
     return (
         <div>
             <h2>상품목록</h2>
-            <ProductList list={data?.pages || []} />
+            <ProductList list={data?.pages || []} Item={ProductItem} />
             <div ref={fetchMoreRef}></div>
         </div>
     )
