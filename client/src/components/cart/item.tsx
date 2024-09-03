@@ -11,7 +11,7 @@ const CartItem = (
     const queryClient = getClient()
     const { mutate: updateCart } = useMutation(
         ({ id, amount }: { id: string, amount: number }) =>
-            graphqlFetcher<CartType>(UPDATE_CART, { id, amount }),
+            graphqlFetcher<{ updateCart: CartType }>(UPDATE_CART, { id, amount }),
         {
             onMutate: async ({ id, amount }) => {
                 await queryClient.cancelQueries(QueryKeys.CART)
@@ -26,7 +26,7 @@ const CartItem = (
                 return prevCart[targetIndex]
             },
 
-            onSuccess: (updateCart) => {
+            onSuccess: ({ updateCart }) => {
                 const { cart: prevCart } = queryClient.getQueryData<{ cart: CartType[] }>(QueryKeys.CART) || { cart: [] }
                 const targetIndex = prevCart?.findIndex(cartItem => cartItem.id == updateCart.id)
                 if (!prevCart || targetIndex === undefined || targetIndex < 0) return
