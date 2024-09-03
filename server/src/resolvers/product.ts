@@ -25,12 +25,7 @@ const productResolver: Resolver = {
         }
     },
     Mutation: {
-        addProduct: (parent, {
-            imageUrl,
-            price,
-            title,
-            description
-        }, { db }) => {
+        addProduct: (parent, { imageUrl, price, title, description }, { db }) => {
             const newProduct = {
                 id: uuid(),
                 imageUrl,
