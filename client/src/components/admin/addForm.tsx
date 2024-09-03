@@ -1,39 +1,40 @@
 import { SyntheticEvent } from "react"
-import { ADD_PRODUCT, Product } from "../../graphql/products"
+import { ADD_PRODUCT, Product, Products } from "../../graphql/products"
 import { useMutation } from "react-query"
-import { graphqlFetcher } from "../../queryClient"
+import { getClient, graphqlFetcher, QueryKeys } from "../../queryClient"
 import arrToObj from "../../util/arrToObj"
 
 type OmittedProduct = Omit<Product, 'id' | 'createdAt'>
 
 const AddForm = () => {
+    const queryClient = getClient()
 
     const { mutate: addProduct } = useMutation(
         ({ title, imageUrl, price, description }: OmittedProduct) =>
-            graphqlFetcher<Product>(ADD_PRODUCT, { title, imageUrl, price, description }),
+            graphqlFetcher<{ addProduct: Product }>(ADD_PRODUCT, { title, imageUrl, price, description }),
         {
-            // onMutate: async ({ id, amount }) => {
-            //     await queryClient.cancelQueries(QueryKeys.CART)
-            //     const { cart: prevCart } = queryClient.getQueryData<{ cart: CartType[] }>(QueryKeys.CART) || { cart: [] }
+            onSuccess: ({ addProduct }) => {
+                const adminData = queryClient.getQueriesData<{
+                    pageParams: (number | undefined)[]
+                    pages: Products[]
+                }>([QueryKeys.PRODUCTS, true])
 
-            //     const targetIndex = prevCart.findIndex(cartItem => cartItem.id == id)
-            //     if (targetIndex === undefined || targetIndex < 0) return prevCart
+                const [adminKeys, { pageParams: adminParams, pages: adminPages }] = adminData[0]
+                const newAdminPages = [...adminPages]
+                newAdminPages[0].products = [addProduct, ...newAdminPages[0].products]
 
-            //     const newCart = [...prevCart]
-            //     newCart.splice(targetIndex, 1, { ...prevCart[targetIndex], amount })
-            //     queryClient.setQueryData(QueryKeys.CART, { cart: newCart })
-            //     return prevCart[targetIndex]
-            // },
+                queryClient.setQueriesData(adminKeys, { pageParams: adminParams, pages: newAdminPages })
 
-            // onSuccess: (updateCart) => {
-            //     const { cart: prevCart } = queryClient.getQueryData<{ cart: CartType[] }>(QueryKeys.CART) || { cart: [] }
-            //     const targetIndex = prevCart?.findIndex(cartItem => cartItem.id == updateCart.id)
-            //     if (!prevCart || targetIndex === undefined || targetIndex < 0) return
+                const productsData = queryClient.getQueriesData<{
+                    pageParams: (number | undefined)[]
+                    pages: Products[]
+                }>([QueryKeys.PRODUCTS, false])
 
-            //     const newCart = [...prevCart]
-            //     newCart.splice(targetIndex, 1, updateCart)
-            //     getClient().setQueryData(QueryKeys.CART, { cart: newCart })
-            // },
+                const [productsKeys, { pageParams: productsParams, pages: productsPages }] = productsData[0]
+                const newProductsPages = [...productsPages]
+                newProductsPages[0].products = [addProduct, ...newProductsPages[0].products]
+                queryClient.setQueriesData(productsKeys, { pageParams: productsParams, pages: newProductsPages })
+            },
         }
     )
 
