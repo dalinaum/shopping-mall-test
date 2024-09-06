@@ -14,26 +14,33 @@ const AddForm = () => {
             graphqlFetcher<{ addProduct: Product }>(ADD_PRODUCT, { title, imageUrl, price, description }),
         {
             onSuccess: ({ addProduct }) => {
-                const adminData = queryClient.getQueriesData<{
-                    pageParams: (number | undefined)[]
-                    pages: Products[]
-                }>([QueryKeys.PRODUCTS, true])
+                // 1) invalidateQueries - 서버에 요청을 다시함.
+                queryClient.invalidateQueries(QueryKeys.PRODUCTS, {
+                    exact: false,
+                    refetchInactive: true
+                })
 
-                const [adminKeys, { pageParams: adminParams, pages: adminPages }] = adminData[0]
-                const newAdminPages = [...adminPages]
-                newAdminPages[0].products = [addProduct, ...newAdminPages[0].products]
+                // 2) 서버에 요청을 하지 않고 응답만 보고 캐시를 업데이트.
+                // const adminData = queryClient.getQueriesData<{
+                //     pageParams: (number | undefined)[]
+                //     pages: Products[]
+                // }>([QueryKeys.PRODUCTS, true])
 
-                queryClient.setQueriesData(adminKeys, { pageParams: adminParams, pages: newAdminPages })
+                // const [adminKeys, { pageParams: adminParams, pages: adminPages }] = adminData[0]
+                // const newAdminPages = [...adminPages]
+                // newAdminPages[0].products = [addProduct, ...newAdminPages[0].products]
 
-                const productsData = queryClient.getQueriesData<{
-                    pageParams: (number | undefined)[]
-                    pages: Products[]
-                }>([QueryKeys.PRODUCTS, false])
+                // queryClient.setQueriesData(adminKeys, { pageParams: adminParams, pages: newAdminPages })
 
-                const [productsKeys, { pageParams: productsParams, pages: productsPages }] = productsData[0]
-                const newProductsPages = [...productsPages]
-                newProductsPages[0].products = [addProduct, ...newProductsPages[0].products]
-                queryClient.setQueriesData(productsKeys, { pageParams: productsParams, pages: newProductsPages })
+                // const productsData = queryClient.getQueriesData<{
+                //     pageParams: (number | undefined)[]
+                //     pages: Products[]
+                // }>([QueryKeys.PRODUCTS, false])
+
+                // const [productsKeys, { pageParams: productsParams, pages: productsPages }] = productsData[0]
+                // const newProductsPages = [...productsPages]
+                // newProductsPages[0].products = [addProduct, ...newProductsPages[0].products]
+                // queryClient.setQueriesData(productsKeys, { pageParams: productsParams, pages: newProductsPages })
             },
         }
     )
