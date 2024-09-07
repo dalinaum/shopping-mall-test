@@ -29,17 +29,13 @@ const Admin = () => {
         fetchNextPage()
     }, [intersecting])
 
-    const startEdit = (index: number) => {
-        return () => {
-            console.log("start edit!")
-            return setEditingIndex(index)
-        }
-    }
+    const startEdit = (index: number) => () => setEditingIndex(index)
+    const doneEdit = () => setEditingIndex(null)
 
     return (
         <>
             <AddForm />
-            <AdminList list={data?.pages || []} editingIndex={editingIndex} startEdit={startEdit} />
+            <AdminList list={data?.pages || []} editingIndex={editingIndex} startEdit={startEdit} doneEdit={doneEdit} />
             <div ref={fetchMoreRef}></div>
         </>
     )

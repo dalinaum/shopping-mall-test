@@ -1,5 +1,9 @@
 import { Link } from 'react-router-dom'
-import { Product } from '../../graphql/products'
+import { useMutation } from 'react-query'
+import { MutableProduct, Product, UPDATE_PRODUCT } from '../../graphql/products'
+import { getClient, graphqlFetcher, QueryKeys } from '../../queryClient'
+import { SyntheticEvent } from 'react'
+import arrToObj from '../../util/arrToObj'
 
 const AdminItem = ({
     id,
@@ -9,15 +13,50 @@ const AdminItem = ({
     description,
     createdAt,
     isEditing,
-    startEdit
+    startEdit,
+    doneEdit
 }: Product & {
     isEditing: boolean
     startEdit: () => void
-}
-) => {
+    doneEdit: () => void
+}) => {
+    const queryClient = getClient()
+
+    const { mutate: updateProduct } = useMutation(({
+        title,
+        imageUrl,
+        price,
+        description
+    }: MutableProduct) =>
+        graphqlFetcher<{ updateProduct: Product }>(UPDATE_PRODUCT, {
+            id,
+            title,
+            imageUrl,
+            price,
+            description
+        }),
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries(QueryKeys.PRODUCTS, {
+                    exact: false,
+                    refetchInactive: true
+                })
+
+                doneEdit()
+            },
+        }
+    )
+
+    const handleSubmit = (e: SyntheticEvent) => {
+        e.preventDefault()
+        const formData = arrToObj([... new FormData(e.target as HTMLFormElement)])
+        formData.price = Number(formData.price)
+        updateProduct(formData as MutableProduct)
+    }
+
     if (isEditing) return (
         <li className="product-item">
-            <form>
+            <form onSubmit={handleSubmit}>
                 <label>
                     상품명 <input name="title" type="text" required defaultValue={title}></input>
                 </label>
@@ -42,7 +81,7 @@ const AdminItem = ({
                 <span className="product-item__price">₩{price}</span>
             </Link>
             {!createdAt && <span>삭제된 상품</span>}
-            <button className="product-item__add-cart" onClick={startEdit }>
+            <button className="product-item__add-cart" onClick={startEdit}>
                 수정
             </button>
         </li>
