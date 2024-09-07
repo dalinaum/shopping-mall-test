@@ -12,7 +12,7 @@ const AdminPage = () => {
     const intersecting = useIntersection(fetchMoreRef)
 
     const { data, isSuccess, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteQuery<Products>(
-        [QueryKeys.PRODUCTS, true],
+        [QueryKeys.PRODUCTS, 'admin'],
         ({ pageParam = '' }) => graphqlFetcher<Products>(GET_PRODUCTS, {
             cursor: pageParam,
             showDeleted: true
