@@ -1,4 +1,4 @@
-import { SyntheticEvent, createRef, useEffect, useRef, useState } from "react"
+import { createRef, SyntheticEvent, useEffect, useRef, useState } from "react"
 import { useRecoilState } from "recoil"
 import { useNavigate } from "react-router-dom"
 import CartItem from "./item"
@@ -25,7 +25,9 @@ const CartList = ({ items }: { items: CartType[] }) => {
     const setItemCheckedFromAll = (targetInput: HTMLInputElement) => {
         // select all 선택시 
         const allChecked = targetInput.checked
-        checkboxRefs.forEach(ref => {
+        checkboxRefs.filter(inputElem => {
+            return !inputElem.current!.disabled
+        }).forEach(ref => {
             ref.current!.checked = allChecked
         })
     }
@@ -79,7 +81,7 @@ const CartList = ({ items }: { items: CartType[] }) => {
                     ))}
                 </ul>
             </form>
-            <WillPay submitTitle="결제창으로" handleSubmit={handleSubmit } />
+            <WillPay submitTitle="결제창으로" handleSubmit={handleSubmit} />
         </div>
     )
 }
