@@ -8,6 +8,7 @@ import WillPay from "../willPay"
 
 const CartList = ({ items }: { items: CartType[] }) => {
     const navigate = useNavigate()
+    // 전역 상태 관리
     const [checkedCartData, setCheckedCartData] = useRecoilState(checkedCartState)
     const formRef = useRef<HTMLFormElement>(null)
     const checkboxRefs = items.map(() => createRef<HTMLInputElement>())
