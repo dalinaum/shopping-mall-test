@@ -24,6 +24,7 @@ const Payment = () => {
     const proceed = () => {
         const ids = checkedCartData.map(({ id }) => (id))
         executePay(ids, {
+            // 실패처리를 해야 함.
             onSuccess: () => {
                 setCheckedCartData([])
                 alert('결제 완료되었습니다.')
