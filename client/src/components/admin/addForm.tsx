@@ -1,5 +1,5 @@
 import { SyntheticEvent } from "react"
-import { ADD_PRODUCT, Product, Products } from "../../graphql/products"
+import { ADD_PRODUCT, Product } from "../../graphql/products"
 import { useMutation } from "react-query"
 import { getClient, graphqlFetcher, QueryKeys } from "../../queryClient"
 import arrToObj from "../../util/arrToObj"
@@ -13,7 +13,8 @@ const AddForm = () => {
         ({ title, imageUrl, price, description }: OmittedProduct) =>
             graphqlFetcher<{ addProduct: Product }>(ADD_PRODUCT, { title, imageUrl, price, description }),
         {
-            onSuccess: ({ addProduct }) => {
+            // onSuccess: ({ addProduct }) => {
+            onSuccess: () => {
                 // 1) invalidateQueries - 서버에 요청을 다시함.
                 queryClient.invalidateQueries(QueryKeys.PRODUCTS, {
                     exact: false,
