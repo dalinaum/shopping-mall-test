@@ -7,7 +7,9 @@ const ProductList = ({ list }: {
     }[]
 }) => (
     <ul className="products">
-        {list.map(page => page.products.map(product => <ProductItem {...product} key={product.id} />))}
+        {list.map(page => page.products.map(product =>
+            <ProductItem {...product} key={product.id} />
+        ))}
     </ul>
 )
 

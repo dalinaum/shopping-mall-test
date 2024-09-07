@@ -10,8 +10,18 @@ const AddForm = () => {
     const queryClient = getClient()
 
     const { mutate: addProduct } = useMutation(
-        ({ title, imageUrl, price, description }: OmittedProduct) =>
-            graphqlFetcher<{ addProduct: Product }>(ADD_PRODUCT, { title, imageUrl, price, description }),
+        ({
+            title,
+            imageUrl,
+            price,
+            description
+        }: OmittedProduct) =>
+            graphqlFetcher<{ addProduct: Product }>(ADD_PRODUCT, {
+                title,
+                imageUrl,
+                price,
+                description
+            }),
         {
             // onSuccess: ({ addProduct }) => {
             onSuccess: () => {

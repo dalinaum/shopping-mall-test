@@ -5,7 +5,8 @@ import { useMutation } from 'react-query'
 import { ADD_CART, CartType } from '../../graphql/cart'
 
 const ProductItem = ({ id, imageUrl, price, title }: Product) => {
-    const { mutate: addCart } = useMutation((id: string) => graphqlFetcher<CartType>(ADD_CART, { id }))
+    const { mutate: addCart } = useMutation((id: string) =>
+        graphqlFetcher<CartType>(ADD_CART, { id }))
 
     return (
         <li className="product-item">
@@ -14,7 +15,12 @@ const ProductItem = ({ id, imageUrl, price, title }: Product) => {
                 <img className="product-item__image" src={imageUrl} />
                 <span className="product-item__price">${price}</span>
             </Link>
-            <button className="product-item__add-cart" onClick={() => addCart(id)}>장바구니 담기</button>
+            <button
+                className="product-item__add-cart"
+                onClick={() => addCart(id)}
+            >
+                장바구니 담기
+            </button>
         </li>
     )
 }
