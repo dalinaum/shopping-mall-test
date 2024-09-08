@@ -11,7 +11,13 @@ const Admin = () => {
     const fetchMoreRef = useRef<HTMLDivElement>(null)
     const intersecting = useIntersection(fetchMoreRef)
 
-    const { data, isSuccess, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteQuery<Products>(
+    const {
+        data,
+        isSuccess,
+        isFetchingNextPage,
+        fetchNextPage,
+        hasNextPage
+    } = useInfiniteQuery<Products>(
         [QueryKeys.PRODUCTS, 'admin'],
         ({ pageParam = '' }) => graphqlFetcher<Products>(GET_PRODUCTS, {
             cursor: pageParam,
@@ -25,7 +31,8 @@ const Admin = () => {
     )
 
     useEffect(() => {
-        if (!intersecting || !isSuccess || !hasNextPage || isFetchingNextPage) return
+        if (!intersecting || !isSuccess || !hasNextPage || isFetchingNextPage)
+            return
         fetchNextPage()
     }, [intersecting])
 
@@ -35,7 +42,12 @@ const Admin = () => {
     return (
         <>
             <AddForm />
-            <AdminList list={data?.pages || []} editingIndex={editingIndex} startEdit={startEdit} doneEdit={doneEdit} />
+            <AdminList
+                list={data?.pages || []}
+                editingIndex={editingIndex}
+                startEdit={startEdit}
+                doneEdit={doneEdit}
+            />
             <div ref={fetchMoreRef}></div>
         </>
     )
