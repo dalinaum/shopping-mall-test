@@ -1,70 +1,87 @@
-import { DBField, writeDB } from '../dbController'
-import { Products, Resolver } from './types'
-import { v4 as uuid } from 'uuid'
+import { Resolver } from './types'
+import { db } from "../../firebase"
+import { addDoc, collection, doc, DocumentData, getDoc, getDocs, limit, orderBy, query, QueryConstraint, serverTimestamp, snapshotEqual, startAfter, updateDoc, where } from 'firebase/firestore'
 
-const setJSON = (data: Products) => writeDB(DBField.PRODUCTS, data)
+const PAGE_SIZE = 15
 
 const productResolver: Resolver = {
     Query: {
-        products: (parent, { cursor = '', showDeleted = false }, { db }) => {
-            const [hasCreated, noCreated] = [
-                db.products.filter(product => !!product.createdAt)
-                    .sort((a, b) => b.createdAt! - a.createdAt!),
-                db.products.filter(product => !product.createdAt),
+        products: async (parent, { cursor = '', showDeleted = false }) => {
+            const products = collection(db, 'products')
+            const queryOptions: QueryConstraint[] = [
+                orderBy('createdAt', 'desc')
             ]
-
-            const filteredDb = showDeleted ? [...hasCreated, ...noCreated]
-                : hasCreated
-            const fromIndex = filteredDb.findIndex(product => product.id === cursor) + 1
-            return filteredDb.slice(fromIndex, fromIndex + 15) || []
+            if (cursor) {
+                const snapshot = await getDoc(doc(db, 'products', cursor))
+                queryOptions.push(startAfter(snapshot))
+            }
+            if (!showDeleted) queryOptions.unshift(
+                where('createdAt', '!=', null)
+            )
+            const q = query(
+                products,
+                ...queryOptions,
+                limit(PAGE_SIZE)
+            )
+            const snapshot = await getDocs(q)
+            const data: DocumentData[] = []
+            snapshot.forEach(doc => data.push({
+                id: doc.id,
+                ...doc.data()
+            }))
+            return data
         },
-        product: (parent, { id }, { db }) => {
-            const found = db.products.find(item => item.id === id)
-            if (found) return found
-            return null
+        product: async (parent, { id }) => {
+            const snapshot = await getDoc(doc(db, 'products', id))
+            return {
+                ...snapshot.data(),
+                id
+            }
         }
     },
     Mutation: {
-        addProduct: (parent, { imageUrl, price, title, description }, { db }) => {
+        addProduct: async (parent, {
+            imageUrl,
+            price,
+            title,
+            description
+        }) => {
             const newProduct = {
-                id: uuid(),
                 imageUrl,
                 price,
                 title,
                 description,
-                createdAt: Date.now()
+                createdAt: serverTimestamp()
             }
-            db.products.push(newProduct)
-            setJSON(db.products)
-            return newProduct
+            const result = await addDoc(collection(db, 'products'), newProduct)
+            const snapshot = await getDoc(result)
+            return {
+                ...snapshot.data(),
+                id: snapshot.id
+            }
         },
-        updateProduct: (parent, { id, ...data }, { db }) => {
-            const existProductIndex = db.products.findIndex(item => item.id === id)
-            if (existProductIndex < 0) {
-                throw new Error("없는 상품입니다")
+        updateProduct: async (parent, { id, ...data }) => {
+            const productRef = doc(db, 'products', id)
+            if (!productRef)
+                throw new Error('상품이 없습니다.')
+            await updateDoc(productRef, {
+                ...data,
+                createdAt: serverTimestamp()
+            })
+            const snapshot = await getDoc(productRef)
+            return {
+                ...snapshot.data(),
+                id: snapshot.id
             }
-            const updatedItem = {
-                ...db.products[existProductIndex],
-                ...data
-            }
-            db.products.splice(existProductIndex, 1, updatedItem)
-            setJSON(db.products)
-            return updatedItem
         },
-        deleteProduct: (parent, { id }, { db }) => {
+        deleteProduct: async (parent, { id }) => {
             // 실제 db에서 delete를 하는 대신,
             // createdAt을 지워서 있는 애만 지우는 편법을 쓰자.
             // 파이어베이스에서(?) sort와 filter는 같은 옵션으로만 가능한 제한이 있다.
-            const existProductIndex = db.products.findIndex(item => item.id === id)
-            if (existProductIndex < 0) {
-                throw new Error("없는 상품입니다")
-            }
-            const updatedItem = {
-                ...db.products[existProductIndex]
-            }
-            delete updatedItem.createdAt
-            db.products.splice(existProductIndex, 1, updatedItem)
-            setJSON(db.products)
+            const productRef = doc(db, 'products', id)
+            if (!productRef)
+                throw new Error('상품이 없습니다.')
+            await updateDoc(productRef, { createdAt: null })
             return id
         }
     }
