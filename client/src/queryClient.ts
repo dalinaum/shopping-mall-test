@@ -21,7 +21,7 @@ export const getClient = (() => {
     }
 })()
 
-const BASE_URL = 'http://localhost:8000/graphql'
+const BASE_URL = import.meta.env.SERVER_BASE_URL || 'http://localhost:8000/graphql'
 
 export const resetFetcher = async ({
     method,

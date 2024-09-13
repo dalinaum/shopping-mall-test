@@ -23,12 +23,13 @@ import { DBField, readDB } from './dbController'
         path: '/graphql',
         cors: {
             origin: [
-                'http://localhost:5173',
+                process.env.CLIENT_BASE_URL || 'http://localhost:5173',
                 'https://studio.apollographql.com'
             ],
             credentials: true,
         }
     })
-    await app.listen({ port: 8000 })
-    console.log('server listening on 8000...')
+    const port = process.env.PORT || 8000
+    await app.listen({ port })
+    console.log(`server listening on ${port}...`)
 })()
