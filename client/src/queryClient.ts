@@ -21,6 +21,7 @@ export const getClient = (() => {
     }
 })()
 
+console.log("BASE_URL" + import.meta.env.VITE_SERVER_BASE_URL)
 const BASE_URL = import.meta.env.VITE_SERVER_BASE_URL || 'http://localhost:8000/graphql'
 
 export const resetFetcher = async ({
