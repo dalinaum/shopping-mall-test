@@ -4,6 +4,5 @@
             "source": "/(.*)",
             "destination": "/"
         }
-    ],
-    "_comment": "React Route처리를 위해 서버에서 핸들하지 않고 루트로 보내도록."
+    ]
 }
