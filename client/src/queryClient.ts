@@ -1,8 +1,6 @@
 import { QueryClient } from 'react-query'
 import { RequestDocument, request } from 'graphql-request'
 
-type AnyOBJ = { [key: string]: any }
-
 export const getClient = (() => {
     let client: QueryClient | null = null
     return () => {
