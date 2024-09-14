@@ -1,6 +1,6 @@
 import { addDoc, collection, deleteDoc, doc, DocumentData, getDoc, getDocs, increment, query, updateDoc, where } from "firebase/firestore"
 import { Product, Resolver } from "./types"
-import { db } from "../../firebase"
+import { db } from "../firebase"
 
 const cartResolver: Resolver = {
     Query: {

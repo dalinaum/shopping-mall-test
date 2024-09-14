@@ -1,5 +1,5 @@
 import { Resolver } from './types'
-import { db } from "../../firebase"
+import { db } from "../firebase"
 import { addDoc, collection, doc, DocumentData, getDoc, getDocs, limit, orderBy, query, QueryConstraint, serverTimestamp, snapshotEqual, startAfter, updateDoc, where } from 'firebase/firestore'
 
 const PAGE_SIZE = 15
